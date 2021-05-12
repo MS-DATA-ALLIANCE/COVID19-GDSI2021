@@ -1,0 +1,5 @@
+covid19_sympt_fever,covid19_sympt_dry_cough,covid19_sympt_fatigue,covid19_sympt_shortness_breath,covid19_sympt_loss_smell_taste,covid19_confirmed_case,covid19_admission_hospital,covid19_ventilation,covid19_outcome_death,age_years,sex,ms_type,ms_onset_date,edss_value
+no,no,yes,no,yes,no,no,,,40,female,RRMS,2012-01-01,2.0
+no,no,yes,no,yes,yes,no,,,50,male,RRMS,2010-01-01,1.0
+no,no,yes,no,yes,yes,no,,,22,female,,,4.0
+yes,yes,yes,no,yes,yes,yes,yes,,32,male,SPMS,2015-01-01,5.0
