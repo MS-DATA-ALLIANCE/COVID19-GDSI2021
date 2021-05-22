@@ -256,14 +256,29 @@ def create_duration_treatment_cat(df_in):
         print("Warning : impossible to compute treatment duration !")
         df["duration_treatment"] = None
 
-    df["duration_treatment_cat"] = None
-    df.loc[df["duration_treatment"]<365,"duration_treatment_cat"] = 0
-    df.loc[(df["duration_treatment"]>=365)&(df["duration_treatment"]<730),"duration_treatment_cat"] = 1
-    df.loc[df["duration_treatment"]>=730,"duration_treatment_cat"] = 2
+    df["duration_treatment_cat1"] = None
+    df.loc[df["duration_treatment"]<365,"duration_treatment_cat1"] = 0
+    df.loc[(df["duration_treatment"]>=365)&(df["duration_treatment"]<730),"duration_treatment_cat1"] = 1
+    df.loc[df["duration_treatment"]>=730,"duration_treatment_cat1"] = 2
+    
+    df["duration_treatment_cat2"] = None
+    df.loc[df["duration_treatment"]<182,"duration_treatment_cat2"] = 0
+    df.loc[df["duration_treatment"]>=182,"duration_treatment_cat2"] = 1
 
     return df
 
+def create_covid_wave(df_in):
+    df = df_in.copy()
 
+    if "covid_wave1" not in df.columns:
+        df["covid_wave1"] = None
+
+    if "covid_wave2" not in df.columns:
+        df["covid_wave2"] = None
+        if "covid19_state_suspected_onset" in df.columns:
+            import ipdb; ipdb.set_trace()
+            df.loc[df.covid19_state_suspected_onset ==0 ] = 0
+            
 
 def enhance_data(df_in):
     df = df_in.copy()
@@ -287,6 +302,8 @@ def enhance_data(df_in):
     df = create_covid19_outcome_levels_2(df)
 
     df = create_duration_treatment_cat(df)
+
+    df = create_covid_wave(df)
 
     return df
 
