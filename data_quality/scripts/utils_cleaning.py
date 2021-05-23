@@ -90,6 +90,7 @@ def repair_data(df_in):
     df_res = cleaning_functions.repair_type_dmt_other(df_res)
     df_res = cleaning_functions.repair_covid19_icu(df_res)
     df_res = cleaning_functions.repair_covid19_outcome_death(df_res)
+    df_res = cleaning_functions.repair_height_weight(df_res)
 
     # The astype(str) converts np.nan to 'nan', so we revert this (it is a known pandas bug)
     df_res = df_res.replace('nan', np.nan)

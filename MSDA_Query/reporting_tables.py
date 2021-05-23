@@ -36,15 +36,17 @@ else:
     #querry_qmenta.querry_central_platform(args.except_group, update = False)
 
 
-report_utils.germany_fix("Germany3")
-report_utils.uk_fix("UK3")
+#report_utils.germany_fix("Germany3")
+#report_utils.uk_fix("UK3")
+
 #Compute reference tables
-report_utils.compute_references(directories = ["QMENTA","USA7","Germany5","CEMCAT5","UK5"])
+report_utils.compute_references(directories = ["QMENTA"])#,"USA7","Germany5","CEMCAT5","UK5"])
 
 #Aggregation
-report_utils.aggregate_tables(directories = ["QMENTA","USA7","Germany5","CEMCAT5","UK5"])
+report_utils.aggregate_tables(directories = ["QMENTA"])#,"USA7","Germany5","CEMCAT5","UK5"])
 
 #Generate tables for vizu
+"""
 report_utils.gen_tables_viz()
 
 report_tables = []
@@ -64,3 +66,4 @@ for report_source in ["clinicians","patients"]:
         r_tab = report_utils.report_table_gen(report_source, features, strats)
         report_tables+= [r_tab]
         r_tab.to_csv(f"./results/reports/report_{report_source}_{features}.csv")
+"""

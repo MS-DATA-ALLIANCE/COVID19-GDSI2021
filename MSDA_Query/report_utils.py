@@ -24,6 +24,8 @@ def aggregate_tables(directories = ["Germany","QMENTA"]):
             col_of_interest = ("_".join(f.split("covid19")[0].split("_")[2:-1])).split("_AND_")
         elif "multi3_" in f:
             col_of_interest = ("_".join(f.split("covid19")[0].split("_")[2:-1])).split("_AND_")
+        elif "query3" in f:
+            col_of_interest = ["_".join(f.split("covid19")[0].split("_")[2:-1])]
         #mapping_dict = {"age":"Age_in_cat", "disease_duration": "disease_duration_in_cat", "edss":"edss_in_cat", "bmi" : "bmi_in_cat"}
         #if col_of_interest in mapping_dict:
         #        col_of_interest = mapping_dict[col_of_interest]
@@ -31,10 +33,11 @@ def aggregate_tables(directories = ["Germany","QMENTA"]):
         for dir_name in directories:
             if f in dir_dict[dir_name]:
                 df_temp = pd.read_csv(f"./results/{dir_name}/{f}")
-                if (("multi2_" in f) or ("multi3_" in f)) and (not("QMENTA" in dir_name)):
+                if (("multi2_" in f) or ("multi3_" in f) or ("query3" in f)) and (not("QMENTA" in dir_name)):
                     df_temp["source"] = dir_name
                 df_list += [df_temp]
             else:
+                print(f"File not found : using reference for {f} in directory {dir_name}")
                 source_type = f.split("_")[0]
                 extension = "_".join(f.split("_")[-3:])
                 #type_file = "_".join(f.split("_")[-2:]).split(".")[0]
@@ -63,12 +66,15 @@ def aggregate_tables(directories = ["Germany","QMENTA"]):
 
 
         merge_c = [c for c in df_list[0].columns if ("covid19" in c)] + col_of_interest
+
         if "multi" in f:
             merge_c += ["dmt_type_overall","age_in_cat"]
         if "multi2_" in f:
             merge_c +=["source"]
         if "multi3_" in f:
             merge_c +=["source"]
+        if "query3" in f:
+            merge_c += ["source","dmt_type_overall","age_in_cat","ms_type2","sex_binary","edss_in_cat2"]
 
         for i,df_i in enumerate(df_list):
             df_i[outcome_type] = df_i[outcome_type].apply(lambda x: x.lower())
@@ -263,6 +269,8 @@ def compute_references(directories):
                 df_temp.rename(columns = {"secret_name":"count"},inplace = True)
                 df_temp = df_temp.groupby(["covid19_diagnosis",f"covid19_{file_type}"])["count"].sum().reset_index()
                 df_temp.to_csv(f"./results/{repo}/reference_{report_source}_{file_type}.csv")
+
+                print(f"Created reference file for {file_type} - type : {report_source} - source : {repo}")
 
 
 def feasibility_counts(feature, source,diagnosis):

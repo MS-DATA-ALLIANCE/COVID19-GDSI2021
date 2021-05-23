@@ -22,6 +22,8 @@ df = clean_data(df,None,None)
 #Augment
 print("Creating new variables ....")
 
+df = clean_dates(df)
+
 df["report_source"]="clinicians"
 df = enhance_data(df)
 df["secret_name"] = np.arange(df.shape[0])

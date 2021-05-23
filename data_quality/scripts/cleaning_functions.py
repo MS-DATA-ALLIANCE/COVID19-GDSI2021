@@ -493,3 +493,24 @@ def repair_has_comorbidities(df_in):
 
 
     return df_out
+
+def repair_height_weight(df_in):
+    df_out = df_in.copy()
+    df_out["height"] = pd.to_numeric(df_in["height"],errors = "coerce")
+    df_out["weight"] = pd.to_numeric(df_in["weight"],errors = "coerce")
+
+    return df_out
+
+def clean_height(df_in):
+    if "height" not in df_in.columns:
+        print("Unable to clean height as the column is not in the dataframe")
+        return {}
+
+    failures = {}
+
+    fail_ids = df_in[(pd.to_numeric(df_in["height"],errors = "coerce")<100) | (pd.to_numeric(df_in["height"],errors = "coerce")>210)]["id"].astype(int).tolist()
+
+    for fail_id in fail_ids:
+        failures[fail_id] = "height"
+
+    return failures
