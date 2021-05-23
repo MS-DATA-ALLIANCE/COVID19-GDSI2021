@@ -19,6 +19,8 @@ for date_col in date_cols:
 #Clean
 print("Cleaning data ....")
 df = clean_data(df,None,None)
+df = clean_dates(df)
+
 #Augment
 print("Creating new variables ....")
 

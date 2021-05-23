@@ -1,5 +1,18 @@
 import pandas as pd
 import numpy as np
+import datetime
+
+
+def clean_dates(df_in):
+    df = df_in.copy()
+    df_types = df.dtypes
+    date_cols = list(df_types.loc[df_types=="datetime64[ns]"].index) + ["covid19_admission_hospital_release","covid19_admission_hospital_date","covid19_date_lab_test",
+                                                            "covid19_date_suspected_onset","dmt_start_date","edss_date_diagnosis","ms_diagnosis_date","ms_onset_date","covid19_outcome_death_date",
+                                                                       'covid19_self_isolation_date','dmt_end_date','dmt_glucocorticoid_start_date',
+       'dmt_glucocorticoid_stop_date','dmt_stop_date']
+    for col in date_cols:
+        df[col] = pd.to_datetime(df[col],errors="coerce")
+    return df
 
 
 def create_covid19_diagnosis(df_in):
@@ -83,8 +96,8 @@ def create_edss_in_cat(df_in):
 
         df["edss_in_cat2"] = None
 
-        df.loc[(df.edss_value>=0) & (df.edss_value<=6),"edss_in_cat2"] = "zero"
-        df.loc[(df.edss_value>6),"edss_in_cat2"] = "one"
+        df.loc[(df.edss_value>=0) & (df.edss_value<=6),"edss_in_cat2"] = 0
+        df.loc[(df.edss_value>6),"edss_in_cat2"] = 1
     else:
         print(f" Warning : edss_value not in data !")
     return df
@@ -260,7 +273,7 @@ def create_duration_treatment_cat(df_in):
     df.loc[df["duration_treatment"]<365,"duration_treatment_cat1"] = 0
     df.loc[(df["duration_treatment"]>=365)&(df["duration_treatment"]<730),"duration_treatment_cat1"] = 1
     df.loc[df["duration_treatment"]>=730,"duration_treatment_cat1"] = 2
-    
+
     df["duration_treatment_cat2"] = None
     df.loc[df["duration_treatment"]<182,"duration_treatment_cat2"] = 0
     df.loc[df["duration_treatment"]>=182,"duration_treatment_cat2"] = 1
@@ -275,10 +288,11 @@ def create_covid_wave(df_in):
 
     if "covid_wave2" not in df.columns:
         df["covid_wave2"] = None
-        if "covid19_state_suspected_onset" in df.columns:
-            import ipdb; ipdb.set_trace()
-            df.loc[df.covid19_state_suspected_onset ==0 ] = 0
-            
+        if "covid19_date_suspected_onset" in df.columns:
+            df.loc[df.covid19_date_suspected_onset < datetime.datetime(2020,5,31),"covid_wave2"] = 0
+            df.loc[df.covid19_date_suspected_onset > datetime.datetime(2020,10,1),"covid_wave2"] = 1
+
+    return df
 
 def enhance_data(df_in):
     df = df_in.copy()
