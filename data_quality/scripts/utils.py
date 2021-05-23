@@ -289,8 +289,8 @@ def create_covid_wave(df_in):
     if "covid_wave2" not in df.columns:
         df["covid_wave2"] = None
         if "covid19_date_suspected_onset" in df.columns:
-            df.loc[df.covid19_date_suspected_onset < datetime.datetime(2020,5,31),"covid_wave2"] = 0
-            df.loc[df.covid19_date_suspected_onset > datetime.datetime(2020,10,1),"covid_wave2"] = 1
+            df.loc[df.covid19_date_suspected_onset < datetime.datetime(2020,5,31),"covid_wave2"] = 1
+            df.loc[df.covid19_date_suspected_onset > datetime.datetime(2020,10,1),"covid_wave2"] = 2
 
     return df
 
