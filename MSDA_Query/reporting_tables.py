@@ -40,10 +40,10 @@ else:
 #report_utils.uk_fix("UK3")
 
 #Compute reference tables
-report_utils.compute_references(directories = ["QMENTA"])#,"USA7","Germany5","CEMCAT5","UK5"])
+report_utils.compute_references(directories = ["QMENTA","USA"])#,"USA7","Germany5","CEMCAT5","UK5"])
 
 #Aggregation
-report_utils.aggregate_tables(directories = ["QMENTA"])#,"USA7","Germany5","CEMCAT5","UK5"])
+report_utils.aggregate_tables(directories = ["QMENTA","USA"])#,"USA7","Germany5","CEMCAT5","UK5"])
 
 #Generate tables for vizu
 """
