@@ -7,6 +7,7 @@ import report_utils
 import argparse
 import os
 import datetime
+import shutil
 
 import sys
 sys.path.insert(1, '../')
@@ -39,6 +40,35 @@ def get_subjects_data(project_id, auth_obj):
                     r[k] = None
 
     return data_trans
+
+def compute_json_report(report_source):
+    print(f"Writing report files for QMENTA {report_source}.... ")
+    if os.path.isdir("./Outputs_QMENTA"):
+        shutil.rmtree("./Outputs_QMENTA")
+    os.makedirs("./Outputs_QMENTA", exist_ok=True)
+    file_name = f"{report_source}_query3_bmi_in_cat2"
+    outcome_types = ["covid19_admission_hospital","covid19_icu_stay","covid19_ventilation","covid19_outcome_death","covid19_outcome_ventilation_or_ICU", "covid19_outcome_levels_1", "covid19_outcome_levels_2"]
+    for outcome_type in outcome_types:
+        df = pd.read_csv(f"./results/QMENTA/{file_name}_{outcome_type}.csv")
+        df["general_source"] = df.source.apply(lambda x : x.split("_")[0])
+        for source in df.general_source.unique():
+            os.makedirs(f"./Outputs_QMENTA/{source}", exist_ok=True)
+            df_ = df.loc[df.general_source==source]
+            if outcome_type=="covid19_admission_hospital":
+                variables_list = ["dmt_type_overall","age_in_cat","ms_type2","sex_binary","edss_in_cat2"]
+                variables_list += ["covid19_diagnosis"]
+                variables_list += [outcome_type]
+            else:
+                variables_list = [outcome_type]
+            for variable in variables_list:
+               # print(df.groupby(variable)["secret_name"].sum()) #tables to return.
+               result = (df_.groupby(variable)["secret_name"].sum())
+               result.to_json(f"./Outputs_QMENTA/{source}/{report_source}-{variable}.json")
+
+    with open("DoneC.txt", "w") as file:
+        file.write(f"JSON report generated for QMENTA {report_source}")
+    print("Done")
+
 
 
 def querry_central_platform(except_group = "", update = False):
@@ -135,3 +165,6 @@ def querry_central_platform(except_group = "", update = False):
     outfile = f"QMENTA{except_group}/"
     querries.compute_tables(df_clinicians, report_source = "clinicians",outfile = outfile, central_platform = True)
     querries.compute_tables(df_patients, report_source = "patients",outfile = outfile, central_platform = True)
+
+    compute_json_report("clinicians")
+    compute_json_report("patients")

@@ -77,7 +77,8 @@ def aggregate_tables(directories = ["Germany","QMENTA"]):
             merge_c += ["source","dmt_type_overall","age_in_cat","ms_type2","sex_binary","edss_in_cat2"]
 
         for i,df_i in enumerate(df_list):
-            df_i[outcome_type] = df_i[outcome_type].apply(lambda x: x.lower())
+            #import ipdb; ipdb.set_trace()
+            df_i[outcome_type] = df_i[outcome_type].astype(str).apply(lambda x: x.lower())
             df_i.rename(columns = {"secret_name":"count"}, inplace = True)
             if ("source" in merge_c) and ("source" not in df_i.columns):
                 import ipdb; ipdb.set_trace()
