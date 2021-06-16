@@ -43,8 +43,9 @@ def get_subjects_data(project_id, auth_obj):
 
 def compute_json_report(report_source):
     print(f"Writing report files for QMENTA {report_source}.... ")
-    if os.path.isdir("./Outputs_QMENTA"):
-        shutil.rmtree("./Outputs_QMENTA")
+    #if os.path.isdir(f"./Outputs_QMENTA/{report_source}"):
+    #    shutil.rmtree(f"./Outputs_QMENTA/{report_source}")
+        
     os.makedirs("./Outputs_QMENTA", exist_ok=True)
     file_name = f"{report_source}_query3_bmi_in_cat2"
     outcome_types = ["covid19_admission_hospital","covid19_icu_stay","covid19_ventilation","covid19_outcome_death","covid19_outcome_ventilation_or_ICU", "covid19_outcome_levels_1", "covid19_outcome_levels_2"]
