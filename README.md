@@ -5,7 +5,6 @@ MSDA Toolkit  For Federated Registries participating in the COVID19 in MS Global
 
 <img src="/images/ms.png" width="728" height="132">
 
-Docker Container to Help MS Custodians 
 -----------
 #DataSavesLives – #MSCOVID19
 
